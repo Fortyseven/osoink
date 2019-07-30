@@ -1,6 +1,7 @@
+import sys
 import utils
-import requests
-from pprint import pprint
+import helpers
+from modules.prison.common import printInmate
 
 DESCRIPTION = "Search the Federal Bureau of Prisons inmate id."
 
@@ -15,7 +16,9 @@ EXTENDED_HELP = DESCRIPTION + "\n" + \
 
 POST_URL = "https://www.bop.gov/PublicInfo/execute/inmateloc"
 
-id_types = ['bop', 'dcdc', 'fbi', 'ins']
+id_types = {
+    'bop': None, 'dcdc': 'DCDC', 'fbi': 'FBI', 'ins':'INS'
+}
 
 # BOP? 10924-028
 
@@ -32,10 +35,8 @@ id_types = ['bop', 'dcdc', 'fbi', 'ins']
 # -H "Pragma: no-cache" -H "Cache-Control: no-cache" 
 # --data "todo=query&output=json&inmateNum=&nameFirst=John&nameMiddle=&nameLast=Smith&race=&age=&sex="
 
-
-
-def query(State, query_args):
-    print "Searching for {}...".format(query_args[0])
+###############################################################
+def query(state, query_args):
     data = {
         "todo" : "query",
         "output" : "json",
@@ -43,50 +44,30 @@ def query(State, query_args):
     }
 
     if (query_args[1]):
-        if (query_args[1] == 'dcdc'):
-            data['inmateNumType'] = "DCDC"
+        if (query_args[1] in id_types):
+            # BOP is default, does not require inmateNumType
+            if (id_types[query_args[1]] != None):
+                data['inmateNumType'] = id_types[query_args[1]]
+        else:
+            print(id_types.keys())
+            sys.exit("Unknown inmate ID type: {}".format(query_args[1]))
+        
+    print "Searching for {}...".format(query_args[0])
 
-    response = requests.post(POST_URL, data)
-    #data="nameFirst=John&nameMiddle=&nameLast=Smith&race=&age=&sex=")
-    if (State.verbose):
-        print "-------------"
-        print "Raw response:"
-        pprint(response.text)
-        print response.status_code
-    if (response.status_code == 200):
-        dump_results(response)
+    helpers.StandardPOST(state, POST_URL, data, onSuccess)
 
-def dump_results(response):
+    #data="nameFirst=John&nameMiddle=&nameLast=Smith&race=&age=&sex="
+    
+    
+
+###############################################################
+def onSuccess(state, response):
     json_response = response.json()
+    if ('InmateLocator' not in json_response):
+        sys.exit("Nonstandard response (bad input?)")
+
     if len(json_response['InmateLocator']) > 0:
         for inmate in json_response['InmateLocator']:
-            print_inmate(inmate)
+            printInmate(inmate)
     else:
         print "No results"
-
-def print_inmate(inmate):
-    print "-------------"
-    print "INMATE {} {}\n".format(inmate['inmateNum'],inmate['inmateNumType'])
-    print "First:\t " + inmate['nameFirst']
-    print "Last:\t " + inmate['nameLast']
-    if (inmate['nameMiddle']):
-        print "Middle:\t " + inmate['nameMiddle']
-    if (inmate['suffix']):
-        print "Suffix:\t " + inmate['suffix']
-
-    print "{} {}, Age {}".format( inmate['race'], inmate['sex'], inmate['age'])
-    print "\nFACILITY:\n"
-    print "Facility Code:\t " + inmate['faclCode']
-    print "Facility Name:\t " + inmate['faclName']
-    print "Facility Type:\t " + inmate['faclType']
-    print "Facility URL:\t " + "https://www.bop.gov" + inmate['faclURL']
-    print "\nRELEASE:\n"
-    if (inmate['projRelDate']):
-        print "Proj Release:\t " + inmate['projRelDate']
-    if (inmate['actRelDate']):
-        print "Actual Release:\t " + inmate['actRelDate']
-    if (inmate['releaseCode']):
-        print "Release Code:\t " + inmate['releaseCode']
-    
-    
-
