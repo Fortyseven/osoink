@@ -8,7 +8,7 @@ def random_line(filename):
         if random.randrange(num): continue
         line = aline
     f.close()
-    return line
+    return line.strip()
 
 def getRandomUserAgent():
     return random_line(os.path.dirname(os.path.realpath(__file__))+\
