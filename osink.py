@@ -21,7 +21,7 @@ def load_modules():
     pysearchre = re.compile('.py$', re.IGNORECASE)
     plugin_files = filter(pysearchre.search, os.listdir(
         os.path.join(os.path.dirname(os.path.realpath(__file__)), 'modules')))
-    
+
     for plugin_name in plugin_files:
         shortname = os.path.splitext(plugin_name)[0]
         if shortname == '__init__':
