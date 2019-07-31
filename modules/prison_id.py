@@ -43,7 +43,7 @@ def query(state, query_args):
         "inmateNum" : query_args[0].translate(None, '- '),
     }
 
-    if (query_args[1]):
+    if (len(query_args) > 1):
         if (query_args[1] in id_types):
             # BOP is default, does not require inmateNumType
             if (id_types[query_args[1]] != None):

@@ -41,10 +41,9 @@ def main():
     parser.add_argument('--list-modules', action="store_true", help="list available modules")
     parser.add_argument('--random-user-agent', action="store_true", default=True, help="use a random user agent")
     parser.add_argument('module', type=str, action="store", help="Query using module name")
-    parser.add_argument('query', type=str, action="store", help="Search query", nargs='?')
-    parser.add_argument('arg1', type=str, action="store", help="Optional argument 1", nargs='?')
-    parser.add_argument('arg2', type=str, action="store", help="Optional argument 2", nargs='?')
+    parser.add_argument('query', type=str, action="store", help="Search query", nargs='*')
     args  = parser.parse_args()
+    
 
     if (args.list_modules): 
         list_modules()
@@ -64,7 +63,7 @@ def main():
     State.random_user_agent = args.random_user_agent
 
     # Call the module with the query
-    modules[args.module].query(State,[args.query, args.arg1, args.arg2])
+    modules[args.module].query(State, args.query)
 
 if __name__ == "__main__":
     main()
