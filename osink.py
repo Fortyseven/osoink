@@ -36,28 +36,28 @@ def list_modules():
     for module_name in modules:
         print("{}\t{}".format(module_name, modules[module_name].DESCRIPTION))
 
-def main():    
+def main():
     parser = argparse.ArgumentParser("osink - osint search tool")
     parser.add_argument('-v', action="store_true", help="verbose")
     parser.add_argument('--list-modules', action="store_true", help="list available modules")
     parser.add_argument('--random-user-agent', action="store_true", default=True, help="use a random user agent")
-    parser.add_argument('module', type=str, action="store", help="Query using module name")
-    parser.add_argument('query', type=str, action="store", help="Search query", nargs='*')
+    parser.add_argument('module', type=str, action="store", help="Query using module name", nargs='?')
+    parser.add_argument('query', type=str, action="store", help="Search query", nargs=argparse.REMAINDER)
     args  = parser.parse_args()
-    
+
+    modules = load_modules()
+
     if (args.v):
         print(args)
         print
 
-    if (args.list_modules): 
+    if (args.list_modules):
         list_modules()
         sys.exit(1)
 
     if (args.module == None):
-        parser.error("A module name is required with --module")    
+        parser.error("A module name is required with --module")
         sys.exit(1)
-
-    modules = load_modules()
 
     if (args.query == None):
         print(modules[args.module].EXTENDED_HELP)
