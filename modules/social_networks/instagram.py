@@ -55,4 +55,6 @@ def printProfile():
     if (ig_profile.bio):
         print "Bio:\t{}".format(ig_profile.bio)
 
+    print
+
 
