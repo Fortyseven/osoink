@@ -6,6 +6,7 @@ import re
 import importlib
 import argparse
 import utils
+from pprint import pprint
 from bs4 import BeautifulSoup
 
 modules = {}
@@ -44,6 +45,9 @@ def main():
     parser.add_argument('query', type=str, action="store", help="Search query", nargs='*')
     args  = parser.parse_args()
     
+    if (args.v):
+        print(args)
+        print
 
     if (args.list_modules): 
         list_modules()
