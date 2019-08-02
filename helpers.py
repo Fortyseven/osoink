@@ -4,8 +4,10 @@ import utils
 from pprint import pprint
 
 ###############################################################
-def StandardPOST(state, url, data, success_func, fail_func = None):
+def StandardPOST(state, url, data, success_func, fail_func = None, custom_headers):
     headers = {}
+    headers.update(custom_headers)
+
     response = None
 
     if (state.random_user_agent):
@@ -42,8 +44,10 @@ def StandardPOST(state, url, data, success_func, fail_func = None):
             sys.exit(1)
 
 ###############################################################
-def StandardGET(state, url, data, success_func, fail_func=None):
+def StandardGET(state, url, data, success_func, fail_func=None, custom_headers = {}):
     headers = {}
+    headers.update(custom_headers)
+
     response = None
 
     if (state.random_user_agent):
