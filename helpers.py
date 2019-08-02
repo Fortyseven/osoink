@@ -4,7 +4,7 @@ import utils
 from pprint import pprint
 
 ###############################################################
-def StandardPOST(state, url, data, success_func, fail_func = None, custom_headers):
+def StandardPOST(state, url, data, success_func, fail_func = None, custom_headers = {}):
     headers = {}
     headers.update(custom_headers)
 
