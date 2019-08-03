@@ -34,11 +34,12 @@ def StandardPOST(state, url, data, success_func, fail_func = None, custom_header
             print "\n#####################\n"
 
     if (response.status_code == 200):
-        success_func(state, response)
+        success_func(response)
     else:
         if (callable(fail_func)):
-            fail_func(state, response.status_code, response)
-            sys.exit(1)
+            # Consider it a terminal fail if callback returns !0
+            if fail_func(response) != None:
+                sys.exit(1)
         else:
             print "## ERR: Received {} on POST request".format(response.status_code)
             sys.exit(1)
@@ -51,7 +52,8 @@ def StandardGET(state, url, data, success_func, fail_func=None, custom_headers =
     response = None
 
     if (state.random_user_agent):
-        if (state.verbose): print("* Using random agent")
+        if (state.verbose):
+            print("* Using random agent")
         headers['User-Agent'] = utils.getRandomUserAgent()
 
     try:
@@ -74,11 +76,12 @@ def StandardGET(state, url, data, success_func, fail_func=None, custom_headers =
             print "\n#####################\n"
 
     if (response.status_code == 200):
-        success_func(state, response)
+        success_func(response)
     else:
         if (callable(fail_func)):
-            fail_func(state, response.status_code, response)
-            sys.exit(1)
+            if fail_func(response) != None:
+                sys.exit(1)
         else:
             print "## ERR: Received {} on GET request".format(response.status_code)
             sys.exit(1)
+    return

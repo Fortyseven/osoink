@@ -1,69 +1,46 @@
 import sys
 import utils
-import helpers
 import re
 import json
+import dateutil.parser
 from pprint import pprint
 from bs4 import BeautifulSoup
+from UsernameProbe import UsernameProbe
 
-URL = "https://www.gog.com/u/{}"
+class GOGProbe(UsernameProbe):
+    def __init__(self, state, username):
+        UsernameProbe.__init__(self,
+            state,
+            "GOG",
+            username,
+            "get",
+            "https://www.gog.com/u/{}")
+        self.run()
 
-class profile:
-    username = None
-    url = None
-    title = None
-    bio = {}
+    def processResponse(self, response):
+        self.profile_data['URL'] = self.url.format(self.username)
 
+        html = response.text.encode('utf-8').strip()
 
-def scrapeUserInfo(state, username):
-    profile.username = username
-    helpers.StandardGET(state, URL.format(username), None, onSuccess, onFail)
+        content = BeautifulSoup(response.text, 'html.parser')
+        self.profile_data['Title'] = content.title.contents[0]
 
+        ## -----
 
-def onFail(state, code, response):
-    print "* Nothing on GOG..."
+        bio_start = html.index('window.profilesData.profileUser')
+        bio_end = html.index('window.profilesData.serverNow')
 
+        bio_text = html[bio_start:bio_end]
 
-def onSuccess(state, response):
-    html = response.text.encode('utf-8').strip()
+        regex = r"profileUser = (.*);"
+        matches = re.search(regex, bio_text)
+        bio_json_str = matches.group(1)
 
-    content = BeautifulSoup(response.text, 'html.parser')
-    profile.title = content.title.contents[0]
+        bio_json = json.loads(bio_json_str)
 
-    bio_start = html.index('window.profilesData.profileUser')
-    bio_end = html.index('window.profilesData.serverNow')
-
-    bio_text = html[bio_start:bio_end]
-
-    regex = r"profileUser = (.*);"
-    matches = re.search(regex, bio_text)
-    bio_json_str = matches.group(1)
-
-    bio_json = json.loads(bio_json_str)
-
-    profile.bio['User ID'] = bio_json['userId']
-    profile.bio['Created Date'] = bio_json['created_date']
-    profile.bio['Achievements'] = bio_json['stats']['achievements']
-    profile.bio['Games Owned'] = bio_json['stats']['games_owned']
-    profile.bio['Hours Played'] = bio_json['stats']['hours_played']
-
-    printProfile()
-
-
-def printProfile():
-    print "\n=== GOG ============================="
-    if (profile.url):
-        print "URL:\t\t{}".format(profile.url)
-    else:
-        print "URL:\t\t{}".format(URL.format(profile.username))
-
-    print "Title:\t\t{}".format(profile.title)
-
-    if (len(profile.bio) > 0):
-        for value in profile.bio:
-            print value + ":\t", profile.bio[value]
-
-    print
-
-
-
+        self.profile_data['User ID'] = bio_json['userId']
+        self.profile_data['Created Date'] = \
+            dateutil.parser.parse(bio_json['created_date']).strftime("%Y-%m-%d @ %I:%M:%S%p")
+        self.profile_data['Achievements'] = bio_json['stats']['achievements']
+        self.profile_data['Games Owned'] = bio_json['stats']['games_owned']
+        self.profile_data['Hours Played'] = bio_json['stats']['hours_played']

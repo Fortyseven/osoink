@@ -5,10 +5,13 @@ import re
 import json
 from pprint import pprint
 
+# FIXME - This module is currently incomplete, requiring incorporation of an API key. We'll also
+# need to add a config file for holding this kind of data. No doubt it will be used elsewhere by
+# other modules.
+
 URL = "https://api.twitter.com/graphql/SEn6Mq-OakvVOT1CJqUO2A/UserByScreenName?variables=%7B%22screen_name%22%3A%22{}%22%2C%22withHighlightedLabel%22%3Atrue%7D"
 
 def scrapeUserInfo(state, username):
-    # FIXME - this is totally going to break, but let's just deal with it as it is at the moment...
     helpers.StandardGET(state, URL.format(username),
         None, onSuccess, onFail,
         {
@@ -34,7 +37,7 @@ def scrapeUserInfo(state, username):
 
 
 def onFail(state, code, response):
-    print "* Nothing on Twitter..."
+    print "* Nothing on Twitter ({})...".format(code)
 
 
 def onSuccess(state, response):
