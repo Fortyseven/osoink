@@ -37,7 +37,7 @@ def list_modules():
         print("{}\t{}".format(module_name, modules[module_name].DESCRIPTION))
 
 def main():
-    parser = argparse.ArgumentParser("osink - osint search tool")
+    parser = argparse.ArgumentParser()
     parser.add_argument('-v', action="store_true", help="verbose")
     parser.add_argument('--list-modules', action="store_true", help="list available modules")
     parser.add_argument('--random-user-agent', action="store_true", default=False, help="use a random user agent")
