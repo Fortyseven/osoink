@@ -5,6 +5,9 @@ from OinkModule import OinkModule
 from collections import OrderedDict
 
 # https://www.bop.gov/inmateloc
+# Samples
+# BOP:  10924-028
+# DCDC: 183-608
 
 class Module(OinkModule):
     id_types = {
