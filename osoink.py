@@ -26,7 +26,7 @@ def load_modules():
         shortname = os.path.splitext(plugin_name)[0]
         if shortname == '__init__':
             continue
-        modules[shortname] = importlib.import_module('modules.' + shortname)
+        modules[shortname] = importlib.import_module('modules.' + shortname).Module
 
     return modules
 
@@ -67,7 +67,7 @@ def main():
     State.random_user_agent = args.random_user_agent
 
     # Call the module with the query
-    modules[args.module].query(State, args.query)
+    modules[args.module](State, args.query)
 
 if __name__ == "__main__":
     main()
