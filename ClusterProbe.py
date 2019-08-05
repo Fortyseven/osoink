@@ -54,9 +54,39 @@ class ClusterProbe:
 
         # print math.ceil(max_tab_width/4)
 
-        for data in self.profile_data:
-            val = self.profile_data[data]
-            val_type = type(self.profile_data[data])
+        # for data in self.profile_data:
+        #     val = self.profile_data[data]
+        #     val_type = type(self.profile_data[data])
+        #     if (val_type == str):
+        #         try:
+        #             val = val.encode('utf-8')
+        #         except:
+        #             pass
+        #     elif (val_type == int):
+        #         val = format(val, ",")
+
+        #     # FIXME - make this a bit smarter later
+        #     tabsize=2
+        #     if (len(data) <= 4): tabsize=3
+
+        #     print "- {}:{}{}".format(data,"\t"*tabsize ,val)
+
+        # print
+
+
+        if (type(self.profile_data) == list):
+            for entry in self.profile_data:
+                self.processEntry(entry)
+        else:
+            self.processEntry(self.profile_data)
+
+
+    def processEntry(self, single_entry):
+        for data in single_entry:
+            val = single_entry[data]
+            if (val == None or val == ''): continue
+
+            val_type = type(single_entry[data])
             if (val_type == str):
                 try:
                     val = val.encode('utf-8')
@@ -70,5 +100,4 @@ class ClusterProbe:
             if (len(data) <= 4): tabsize=3
 
             print "- {}:{}{}".format(data,"\t"*tabsize ,val)
-
         print
