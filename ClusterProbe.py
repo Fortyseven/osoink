@@ -4,13 +4,12 @@ import math
 from collections import OrderedDict
 
 class ClusterProbe:
-    def __init__(self, state, name, username, method, url):
+    def __init__(self, state, name, method, url):
         self.service_name = name
         self.state = state
         self.profile_data = OrderedDict()
         self.custom_headers = {}
         self.data = {}
-        self.username = username
         self.method = method
         self.url = url
 
@@ -31,14 +30,14 @@ class ClusterProbe:
     def run(self):
         if self.method == 'get':
             helpers.StandardGET(self.state,
-                self.url.format(self.username),
+                self.url,
                 self.data,
                 self.onSuccess,
                 self.onFail,
                 self.custom_headers)
         if self.method == 'post':
             helpers.StandardPOST(self.state,
-                self.url.format(self.username),
+                self.url,
                 self.data,
                 self.onSuccess,
                 self.onFail,

@@ -9,13 +9,12 @@ from ClusterProbe import ClusterProbe
 
 
 class InstagramProbe(ClusterProbe):
-    def __init__(self, state, username):
+    def __init__(self, state, query):
         ClusterProbe.__init__(self,
             state,
             "Instagram",
-            username,
             "get",
-            "https://www.instagram.com/{}/")
+            "https://www.instagram.com/{}/".format(query))
         self.run()
 
 
@@ -24,7 +23,7 @@ class InstagramProbe(ClusterProbe):
         regex = r"\"biography\":\"([^\"]*)\""
         matches = re.search(regex, html)
 
-        self.profile_data['URL'] = self.url.format(self.username)
+        self.profile_data['URL'] = self.url
         self.profile_data['Bio'] = matches.group(1)
 
         content = BeautifulSoup(response.text, 'html.parser')

@@ -8,13 +8,12 @@ from bs4 import BeautifulSoup
 from ClusterProbe import ClusterProbe
 
 class TwitterScrapedProbe(ClusterProbe):
-    def __init__(self, state, username):
+    def __init__(self, state, query):
         ClusterProbe.__init__(self,
             state,
             "Twitter",
-            username,
             "get",
-            "https://twitter.com/{}"
+            "https://twitter.com/{}".format(query)
         )
         self.custom_headers = {
             'User-Agent' : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
@@ -23,7 +22,7 @@ class TwitterScrapedProbe(ClusterProbe):
 
 
     def processResponse(self, response):
-        self.profile_data['URL'] = self.url.format(self.username)
+        self.profile_data['URL'] = self.url
 
         html = response.text.encode('utf-8').strip()
 

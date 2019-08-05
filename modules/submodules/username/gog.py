@@ -8,17 +8,16 @@ from bs4 import BeautifulSoup
 from ClusterProbe import ClusterProbe
 
 class GOGProbe(ClusterProbe):
-    def __init__(self, state, username):
+    def __init__(self, state, query):
         ClusterProbe.__init__(self,
             state,
             "GOG",
-            username,
             "get",
-            "https://www.gog.com/u/{}")
+            "https://www.gog.com/u/{}".format(query))
         self.run()
 
     def processResponse(self, response):
-        self.profile_data['URL'] = self.url.format(self.username)
+        self.profile_data['URL'] = self.url
 
         html = response.text.encode('utf-8').strip()
 
