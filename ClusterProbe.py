@@ -25,7 +25,7 @@ class ClusterProbe:
 
 
     def onFail(self, response):
-        print "* Nothing on {} ({}) ".format(self.service_name, response.status_code)
+        print "* Nothing on {} ({})\n".format(self.service_name, response.status_code)
 
 
     def run(self):
