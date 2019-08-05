@@ -3,7 +3,7 @@ import helpers
 import math
 from collections import OrderedDict
 
-class UsernameProbe:
+class ClusterProbe:
     def __init__(self, state, name, username, method, url):
         self.service_name = name
         self.state = state

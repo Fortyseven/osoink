@@ -5,11 +5,11 @@ import json
 import dateutil.parser
 from pprint import pprint
 from bs4 import BeautifulSoup
-from UsernameProbe import UsernameProbe
+from ClusterProbe import ClusterProbe
 
-class TwitterScrapedProbe(UsernameProbe):
+class TwitterScrapedProbe(ClusterProbe):
     def __init__(self, state, username):
-        UsernameProbe.__init__(self,
+        ClusterProbe.__init__(self,
             state,
             "Twitter",
             username,

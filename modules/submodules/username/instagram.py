@@ -5,12 +5,12 @@ import json
 import datetime
 from pprint import pprint
 from bs4 import BeautifulSoup
-from UsernameProbe import UsernameProbe
+from ClusterProbe import ClusterProbe
 
 
-class InstagramProbe(UsernameProbe):
+class InstagramProbe(ClusterProbe):
     def __init__(self, state, username):
-        UsernameProbe.__init__(self,
+        ClusterProbe.__init__(self,
             state,
             "Instagram",
             username,
