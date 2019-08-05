@@ -42,6 +42,8 @@ class ClusterProbe:
                 self.onSuccess,
                 self.onFail,
                 self.custom_headers)
+        else:
+            raise Exception("Method unknown ({})".format(self.method))
 
 
     def showReport(self):
